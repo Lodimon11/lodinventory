@@ -31,8 +31,8 @@ export function ActivoTarjeta({ activo }: { activo: Activo }) {
   const Icono = ICONOS_TIPO[activo.tipo] || Monitor
 
   return (
-    <Card className="group flex flex-col h-full shadow-sm dark:shadow-none border border-border/40 hover:border-primary/40 bg-card hover:shadow-[0_8px_24px_rgba(1,195,141,0.15)] hover:-translate-y-[3px] transition-all duration-300 animate-fade-in-up">
-      <CardHeader className="pb-4 bg-gradient-to-br from-primary/5 via-transparent to-transparent rounded-t-xl border-b border-border/30">
+    <Card className="group flex flex-col h-full shadow-sm dark:shadow-none hover:shadow-[0_8px_24px_rgba(1,195,141,0.15)] hover:-translate-y-[3px] transition-all duration-300 animate-fade-in-up">
+      <CardHeader className="pb-4 bg-gradient-to-br from-primary/5 via-transparent to-transparent rounded-t-[16px] border-b border-border/30">
         <div className="flex justify-between items-start mb-2">
           {/* Chip de tipo arriba a la izquierda */}
           <Badge variant="secondary" className="font-medium text-xs rounded-full bg-primary/10 text-primary hover:bg-primary/20 border-0">

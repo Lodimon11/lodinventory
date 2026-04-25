@@ -10,8 +10,8 @@ export default function LayoutDashboard({
   return (
     <div className="flex h-screen bg-background overflow-hidden">
       {/* Sidebar - Se aplica solo al grupo (dashboard) */}
-      <aside className="w-64 shrink-0 border-r bg-sidebar flex flex-col">
-        <div className="p-6 border-b border-border">
+      <aside className="w-64 shrink-0 flex flex-col bg-[linear-gradient(180deg,#191E29,#141920)] border-r-[0.5px] border-r-[rgba(255,255,255,0.06)]">
+        <div className="p-6 border-b border-border/30">
           <h1 className="text-xl font-bold flex items-center gap-2 text-sidebar-foreground">
             <span className="w-2.5 h-2.5 bg-[#01C38D] rounded-full inline-block"></span>
             lodinventory
