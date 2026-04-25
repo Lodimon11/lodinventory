@@ -31,18 +31,15 @@ export function ActivoTarjeta({ activo }: { activo: Activo }) {
   const Icono = ICONOS_TIPO[activo.tipo] || Monitor
 
   return (
-    <Card className="group flex flex-col h-full shadow-sm dark:shadow-none border border-border/40 hover:border-primary/40 bg-card/40 backdrop-blur-sm hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:hover:shadow-[0_8px_30px_rgba(1,195,141,0.03)] hover:-translate-y-[3px] transition-all duration-300 relative overflow-hidden">
-      {/* Micro-borde en hover */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      
+    <Card className="group flex flex-col h-full shadow-sm dark:shadow-none border border-border/40 hover:border-primary/40 bg-card hover:shadow-[0_8px_24px_rgba(1,195,141,0.15)] hover:-translate-y-[3px] transition-all duration-300 animate-fade-in-up">
       <CardHeader className="pb-4 bg-gradient-to-br from-primary/5 via-transparent to-transparent rounded-t-xl border-b border-border/30">
-        <div className="flex justify-between items-start">
-          <CardTitle className="heading-sm font-semibold flex items-center gap-2.5 text-foreground/90">
-            <div className="p-1.5 rounded-md bg-background/50 border border-border/50 shadow-sm">
-              <Icono className="w-4 h-4 text-muted-foreground" />
-            </div>
-            {activo.etiqueta}
-          </CardTitle>
+        <div className="flex justify-between items-start mb-2">
+          {/* Chip de tipo arriba a la izquierda */}
+          <Badge variant="secondary" className="font-medium text-xs rounded-full bg-primary/10 text-primary hover:bg-primary/20 border-0">
+            <Icono className="w-3 h-3 mr-1.5" />
+            {activo.tipo}
+          </Badge>
+          
           <Badge variant="outline" className={COLORES_ESTADO[activo.estado] + " shadow-sm border-0"}>
             {activo.estado === 'activo' && (
               <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5 animate-pulse-dot" />
@@ -50,16 +47,15 @@ export function ActivoTarjeta({ activo }: { activo: Activo }) {
             {ETIQUETAS_ESTADO[activo.estado]}
           </Badge>
         </div>
+        <CardTitle className="heading-sm font-semibold text-foreground/90 mt-2">
+          {activo.etiqueta}
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pt-4">
         <div className="space-y-3 text-sm text-muted-foreground/80">
           <div className="flex items-center gap-2.5 group-hover:text-foreground/70 transition-colors">
             <Fingerprint className="w-4 h-4 opacity-70" />
             <span className="font-mono text-xs bg-muted/50 px-1.5 py-0.5 rounded text-foreground/80 border border-border/40">{activo.direccion_mac || 'Sin MAC'}</span>
-          </div>
-          <div className="capitalize flex items-center gap-2 pt-2">
-            <span className="opacity-70">Tipo:</span>
-            <span className="text-foreground/90 font-medium">{activo.tipo}</span>
           </div>
         </div>
       </CardContent>

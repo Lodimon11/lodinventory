@@ -11,11 +11,11 @@ interface TarjetaMetricaProps {
 
 export function TarjetaMetrica({ titulo, valor, icono: Icono, colorIcono, descripcion }: TarjetaMetricaProps) {
   return (
-    <Card className="relative overflow-hidden shadow-sm dark:shadow-none border border-border/40 hover:border-primary/50 bg-card/50 backdrop-blur-sm hover:-translate-y-[2px] transition-all duration-300 animate-fade-in-up group">
-      {/* Micro-borde de acento tipo Linear */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    <Card className="relative overflow-hidden shadow-sm dark:shadow-none border-l-[3px] border-l-primary bg-primary/5 hover:-translate-y-[2px] transition-all duration-300 animate-fade-in-up group">
+      {/* Fondo con opacidad extra (opcional si ya usamos bg-primary/5) */}
+      <div className="absolute inset-0 bg-card/80 dark:bg-card/90 -z-10" />
       
-      <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0">
+      <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0 relative z-10">
         <CardTitle className="heading-sm text-muted-foreground/80 font-medium">
           {titulo}
         </CardTitle>
