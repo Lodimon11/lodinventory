@@ -9,7 +9,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[linear-gradient(180deg,#01d99e,#01C38D)] text-[#191E29] font-semibold rounded-[10px] shadow-[0_4px_12px_rgba(1,195,141,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_6px_16px_rgba(1,195,141,0.6),inset_0_1px_0_rgba(255,255,255,0.3)] active:shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] hover:opacity-90 transition-all duration-200",
+          "bg-[linear-gradient(180deg,#01d99e,#01C38D)] text-[#0a1a14] font-semibold rounded-[10px] shadow-[0_4px_14px_rgba(1,195,141,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] hover:shadow-[0_6px_18px_rgba(1,195,141,0.6),inset_0_1px_0_rgba(255,255,255,0.3)] hover:-translate-y-[1px] active:shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-[0px] hover:opacity-90 transition-all duration-200",
+        gold:
+          "bg-[linear-gradient(180deg,#e0b84d,#d4a843)] text-[#1a0f00] font-semibold rounded-[10px] shadow-[0_4px_14px_rgba(212,168,67,0.4),inset_0_1px_0_rgba(255,255,255,0.25)] hover:shadow-[0_6px_18px_rgba(212,168,67,0.6),inset_0_1px_0_rgba(255,255,255,0.35)] hover:-translate-y-[1px] active:shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] active:translate-y-[0px] hover:opacity-90 transition-all duration-200",
         outline:
           "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:

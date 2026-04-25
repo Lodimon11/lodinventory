@@ -8,7 +8,7 @@ export function BotonExportar() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={
-        <Button variant="outline" className="gap-2">
+        <Button variant="gold" className="gap-2">
           <Download className="w-4 h-4" />
           Exportar
         </Button>

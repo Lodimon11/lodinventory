@@ -28,8 +28,8 @@ export function NavSidebar() {
               href={enlace.ruta}
               className={`group flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-all border border-transparent ${
                 esActivo
-                  ? 'bg-[rgba(1,195,141,0.12)] shadow-[inset_0_0_20px_rgba(1,195,141,0.05)] border-l-2 border-l-[#01C38D] text-[#01C38D] font-semibold'
-                  : 'text-sidebar-foreground hover:text-[#01C38D] font-medium'
+                  ? 'bg-[rgba(1,195,141,0.1)] border-l-2 border-l-[var(--acento-verde)] text-[var(--acento-verde)] font-semibold'
+                  : 'text-[var(--texto-secundario)] hover:text-[var(--acento-verde)] font-medium'
               }`}
             >
               <div className={`p-1.5 rounded-full transition-colors ${esActivo ? 'bg-transparent' : 'group-hover:bg-[#01C38D18]'}`}>

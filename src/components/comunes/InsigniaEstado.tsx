@@ -9,11 +9,11 @@ import type { EstadoActivo } from '@/tipos'
 import { cn } from '@/lib/utils'
 
 const COLORES_ESTADO: Record<string, string> = {
-  activo: 'bg-[#01C38D] hover:bg-[#01C38D]/80 text-[#191E29]',
-  desasignado: 'bg-[#696E79] hover:bg-[#696E79]/80 text-white',
-  listo_para_entregar: 'bg-[#5ba3d4] hover:bg-[#5ba3d4]/80 text-[#191E29]',
-  en_reparacion: 'bg-[#f59e0b] hover:bg-[#f59e0b]/80 text-[#191E29]',
-  retirado: 'bg-[#ef4444] hover:bg-[#ef4444]/80 text-white',
+  activo: 'border-transparent text-[#01C38D] bg-[rgba(1,195,141,0.12)] font-medium',
+  desasignado: 'border-transparent text-[#696E79] bg-muted/50 font-medium',
+  listo_para_entregar: 'border-transparent text-[#6B8FD4] bg-[rgba(107,143,212,0.12)] font-medium',
+  en_reparacion: 'border-transparent text-[#d4a843] bg-[rgba(212,168,67,0.12)] font-medium',
+  retirado: 'border-transparent text-[#ef4444] bg-[rgba(239,68,68,0.12)] font-medium',
 }
 
 interface InsigniaEstadoProps {

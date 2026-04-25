@@ -49,62 +49,72 @@
 }
 
 :root {
+  --fondo-app: #0f1218;
+  --fondo-sidebar: #191E29;
+  --fondo-card: linear-gradient(145deg, #1c2333, #141b2d);
+  --acento-verde: #01C38D;
+  --acento-dorado: #d4a843;
+  --acento-azul: #6B8FD4;
+  --texto-primario: #FFFFFF;
+  --texto-secundario: #8a9bbf;
+  --texto-muted: #696E79;
+
   --background: #f0f4f8;
   --foreground: #191E29;
   --card: #ffffff;
   --card-foreground: #191E29;
   --popover: #ffffff;
   --popover-foreground: #191E29;
-  --primary: #01C38D;
-  --primary-foreground: #191E29;
+  --primary: var(--acento-verde);
+  --primary-foreground: #0a1a14;
   --secondary: #e2e8f0;
   --secondary-foreground: #191E29;
   --muted: #f1f5f9;
-  --muted-foreground: #696E79;
-  --accent: #01C38D;
+  --muted-foreground: var(--texto-muted);
+  --accent: var(--acento-verde);
   --accent-foreground: #191E29;
   --destructive: #ef4444;
   --border: #e2e8f0;
   --input: #e2e8f0;
-  --ring: #01C38D;
+  --ring: var(--acento-verde);
   --radius: 0.625rem;
-  --sidebar: #191E29;
+  --sidebar: var(--fondo-sidebar);
   --sidebar-foreground: #ffffff;
-  --sidebar-primary: #01C38D;
+  --sidebar-primary: var(--acento-verde);
   --sidebar-primary-foreground: #191E29;
   --sidebar-accent: #132D46;
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: #132D46;
-  --sidebar-ring: #01C38D;
+  --sidebar-ring: var(--acento-verde);
 }
 
 .dark {
-  --background: #0d1117;
-  --foreground: #ffffff;
+  --background: var(--fondo-app);
+  --foreground: var(--texto-primario);
   --card: #132D46;
-  --card-foreground: #ffffff;
+  --card-foreground: var(--texto-primario);
   --popover: #132D46;
-  --popover-foreground: #ffffff;
-  --primary: #01C38D;
-  --primary-foreground: #191E29;
+  --popover-foreground: var(--texto-primario);
+  --primary: var(--acento-verde);
+  --primary-foreground: #0a1a14;
   --secondary: #1e293b;
-  --secondary-foreground: #ffffff;
+  --secondary-foreground: var(--texto-primario);
   --muted: #1e293b;
-  --muted-foreground: #696E79;
-  --accent: #01C38D;
+  --muted-foreground: var(--texto-secundario);
+  --accent: var(--acento-verde);
   --accent-foreground: #191E29;
   --destructive: #ef4444;
   --border: #1e293b;
   --input: #1e293b;
-  --ring: #01C38D;
-  --sidebar: #191E29;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #01C38D;
+  --ring: var(--acento-verde);
+  --sidebar: var(--fondo-sidebar);
+  --sidebar-foreground: var(--texto-primario);
+  --sidebar-primary: var(--acento-verde);
   --sidebar-primary-foreground: #191E29;
   --sidebar-accent: #132D46;
-  --sidebar-accent-foreground: #ffffff;
+  --sidebar-accent-foreground: var(--texto-primario);
   --sidebar-border: #132D46;
-  --sidebar-ring: #01C38D;
+  --sidebar-ring: var(--acento-verde);
 }
 
 @layer base {
@@ -123,26 +133,27 @@
 
 @layer utilities {
   .neo-card {
-    background: linear-gradient(145deg, #1a2035, #131929);
-    box-shadow: 4px 4px 12px rgba(0,0,0,0.5),
-                -2px -2px 6px rgba(255,255,255,0.03),
+    background: var(--fondo-card);
+    box-shadow: 4px 4px 16px rgba(0,0,0,0.6),
+                -1px -1px 4px rgba(255,255,255,0.03),
                 inset 0 1px 0 rgba(255,255,255,0.06);
-    border: 0.5px solid rgba(255,255,255,0.08);
+    border: 0.5px solid rgba(255,255,255,0.07);
+    border-top: 1px solid rgba(255,255,255,0.12);
     border-radius: 16px;
   }
   
   .neo-input {
-    background: rgba(0,0,0,0.3);
-    box-shadow: inset 2px 2px 6px rgba(0,0,0,0.4),
-                inset -1px -1px 3px rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.35);
+    box-shadow: inset 2px 2px 8px rgba(0,0,0,0.5),
+                inset -1px -1px 3px rgba(255,255,255,0.03);
     border: 0.5px solid rgba(255,255,255,0.08);
     border-radius: 10px;
     transition: all 0.2s ease;
   }
   .neo-input:focus-visible {
-    border-color: #01C38D;
-    box-shadow: 0 0 0 3px rgba(1,195,141,0.15),
-                inset 2px 2px 6px rgba(0,0,0,0.4);
+    border-color: var(--acento-verde);
+    box-shadow: 0 0 0 3px rgba(1,195,141,0.12),
+                inset 2px 2px 8px rgba(0,0,0,0.5);
     outline: none;
   }
   .font-heading {
