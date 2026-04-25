@@ -262,3 +262,24 @@ export async function crearMantenimiento(activoId: string, datos: { descripcion:
   }
 }
 
+export async function eliminarActivo(id: string): Promise<{ exito: boolean; error: string | null }> {
+  try {
+    const supabase = crearClienteAdmin()
+    const { error } = await supabase
+      .from('activos')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+    
+    revalidatePath('/activos')
+    revalidatePath('/pool')
+    revalidatePath('/')
+    
+    return { exito: true, error: null }
+  } catch (error) {
+    const mensaje = error instanceof Error ? error.message : 'Error al eliminar el activo'
+    return { exito: false, error: mensaje }
+  }
+}
+

@@ -187,3 +187,22 @@ export async function actualizarUsuario(id: string, datos: Partial<UsuarioSistem
   }
 }
 
+export async function eliminarUsuario(id: string): Promise<{ exito: boolean; error: string | null }> {
+  try {
+    const supabase = crearClienteAdmin()
+    const { error } = await supabase
+      .from('usuarios_sistema')
+      .delete()
+      .eq('id', id)
+
+    if (error) throw error
+    
+    revalidatePath('/usuarios')
+    
+    return { exito: true, error: null }
+  } catch (error) {
+    const mensaje = error instanceof Error ? error.message : 'Error al eliminar el usuario'
+    return { exito: false, error: mensaje }
+  }
+}
+

@@ -1,12 +1,13 @@
 import { obtenerUsuarioPorId, obtenerActivosDisponibles, obtenerAsignacionesPorUsuario } from '@/actions/usuarios'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Building2, Briefcase, Mail, Monitor, User as UserIcon, Clock, Edit } from 'lucide-react'
+import { Building2, Briefcase, Mail, Monitor, User as UserIcon, Clock, Edit, Trash2 } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
 import { BotonAsignar } from '@/components/usuarios/BotonAsignar'
 import { BotonDesasignar } from '@/components/usuarios/BotonDesasignar'
+import { BotonEliminarUsuario } from '@/components/usuarios/BotonEliminarUsuario'
 
 export default async function DetalleUsuarioPage({ params }: { params: Promise<{ id: string }> }) {
   const resolucionParams = await params
@@ -138,6 +139,18 @@ export default async function DetalleUsuarioPage({ params }: { params: Promise<{
           )}
         </CardContent>
       </Card>
+
+      {/* 4. Zona de peligro */}
+      <div className="mt-12 pt-8 border-t border-destructive/20">
+        <h3 className="text-lg font-semibold text-destructive mb-2 flex items-center gap-2">
+          <Trash2 className="w-5 h-5" />
+          Zona de peligro
+        </h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Eliminar a este usuario es una acción permanente y todos los equipos que tenga asignados volverán al pool como desasignados.
+        </p>
+        <BotonEliminarUsuario id={usuario.id} nombre={usuario.nombre_completo} />
+      </div>
     </div>
   )
 }

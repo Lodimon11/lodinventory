@@ -7,12 +7,13 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Laptop, Monitor, Smartphone, Fingerprint, Calendar, User, Wrench, Clock, Edit } from 'lucide-react'
+import { Laptop, Monitor, Smartphone, Fingerprint, Calendar, User, Wrench, Clock, Edit, Trash2 } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
 import { FormularioMantenimiento } from '@/components/activos/FormularioMantenimiento'
 import { BotonCopiar } from '@/components/activos/BotonCopiar'
+import { BotonEliminarActivo } from '@/components/activos/BotonEliminarActivo'
 import { AsignacionConUsuario, Mantenimiento } from '@/types'
 
 const ICONOS_TIPO: Record<string, React.ElementType> = {
@@ -333,6 +334,18 @@ export default async function DetalleActivoPage({ params }: { params: Promise<{ 
           )}
         </CardContent>
       </Card>
+
+      {/* 6. Zona de peligro */}
+      <div className="mt-12 pt-8 border-t border-destructive/20">
+        <h3 className="text-lg font-semibold text-destructive mb-2 flex items-center gap-2">
+          <Trash2 className="w-5 h-5" />
+          Zona de peligro
+        </h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Una vez que elimines este activo, no hay vuelta atrás. Por favor, asegúrate de que es lo que deseas hacer.
+        </p>
+        <BotonEliminarActivo id={activo.id} etiqueta={activo.etiqueta} />
+      </div>
     </div>
   )
 }
