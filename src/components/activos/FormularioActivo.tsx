@@ -31,6 +31,7 @@ const esquemaActivo = z.object({
   unido_dominio: z.boolean().default(false),
   nombre_equipo: z.string().optional(),
   sistema_operativo: z.string().optional(),
+  rustdesk_id: z.string().optional(),
 })
 
 type ValoresFormulario = z.infer<typeof esquemaActivo>
@@ -55,6 +56,7 @@ export function FormularioActivo({ activo }: FormularioActivoProps) {
       unido_dominio: activo?.unido_dominio || false,
       nombre_equipo: activo?.nombre_equipo || '',
       sistema_operativo: activo?.sistema_operativo || '',
+      rustdesk_id: activo?.rustdesk_id || '',
     },
   })
 
@@ -69,7 +71,8 @@ export function FormularioActivo({ activo }: FormularioActivoProps) {
       componentes: JSON.parse(datos.componentes),
       direccion_mac: datos.direccion_mac === '' ? null : datos.direccion_mac,
       nombre_equipo: datos.nombre_equipo === '' ? null : datos.nombre_equipo,
-      sistema_operativo: datos.sistema_operativo === '' ? null : datos.sistema_operativo
+      sistema_operativo: datos.sistema_operativo === '' ? null : datos.sistema_operativo,
+      rustdesk_id: datos.rustdesk_id === '' ? null : datos.rustdesk_id
     }
 
     let errorRespuesta = null
@@ -176,66 +179,84 @@ export function FormularioActivo({ activo }: FormularioActivoProps) {
           />
         </div>
 
-        {(tipoObservado === 'notebook' || tipoObservado === 'escritorio') && (
-          <div className="space-y-4 border rounded-md p-4 bg-muted/10">
-            <h3 className="font-semibold text-sm">Información del Sistema</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="nombre_equipo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre del Equipo</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ej. LPT-FACUNDO" {...field} value={field.value || ''} disabled={cargando} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <div className="space-y-4 border rounded-md p-4 bg-muted/10">
+          <h3 className="font-semibold text-sm">Información del Sistema</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <FormField
+              control={form.control}
+              name="rustdesk_id"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <FormLabel>RustDesk ID</FormLabel>
+                  <FormControl>
+                    <Input placeholder="ej. 114 573 481" {...field} value={field.value || ''} disabled={cargando} />
+                  </FormControl>
+                  <p className="text-[0.8rem] text-muted-foreground mt-1">ID de conexión remota (no cambia)</p>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="sistema_operativo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sistema Operativo</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ej. Windows 11, macOS, Ubuntu" {...field} value={field.value || ''} disabled={cargando} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            {(tipoObservado === 'notebook' || tipoObservado === 'escritorio') && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="nombre_equipo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombre del Equipo</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ej. LPT-FACUNDO" {...field} value={field.value || ''} disabled={cargando} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="unido_dominio"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm md:col-span-2">
-                    <div className="space-y-0.5">
-                      <FormLabel>Unido a dominio</FormLabel>
-                      <p className="text-[0.8rem] text-muted-foreground">
-                        Indica si el equipo está unido al dominio de la organización.
-                      </p>
-                    </div>
-                    <FormControl>
-                      <div className="flex items-center h-5">
-                        <input
-                          type="checkbox"
-                          className="h-4 w-4"
-                          checked={field.value}
-                          onChange={field.onChange}
-                          disabled={cargando}
-                        />
+                <FormField
+                  control={form.control}
+                  name="sistema_operativo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Sistema Operativo</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ej. Windows 11, macOS, Ubuntu" {...field} value={field.value || ''} disabled={cargando} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="unido_dominio"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm md:col-span-2">
+                      <div className="space-y-0.5">
+                        <FormLabel>Unido a dominio</FormLabel>
+                        <p className="text-[0.8rem] text-muted-foreground">
+                          Indica si el equipo está unido al dominio de la organización.
+                        </p>
                       </div>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
+                      <FormControl>
+                        <div className="flex items-center h-5">
+                          <input
+                            type="checkbox"
+                            className="h-4 w-4"
+                            checked={field.value}
+                            onChange={field.onChange}
+                            disabled={cargando}
+                          />
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
           </div>
-        )}
+        </div>
 
         <FormField
           control={form.control}

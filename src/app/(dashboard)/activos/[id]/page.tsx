@@ -12,6 +12,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
 import { FormularioMantenimiento } from '@/components/activos/FormularioMantenimiento'
+import { BotonCopiar } from '@/components/activos/BotonCopiar'
 import { AsignacionConUsuario, Mantenimiento } from '@/types'
 
 const ICONOS_TIPO: Record<string, React.ElementType> = {
@@ -101,38 +102,55 @@ export default async function DetalleActivoPage({ params }: { params: Promise<{ 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* 2. Especificaciones / Componentes */}
         <div className="space-y-6">
-          {(activo.nombre_equipo || activo.sistema_operativo || activo.unido_dominio !== undefined) && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Monitor className="w-5 h-5" />
-                  Información del Sistema
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {activo.nombre_equipo && (
-                    <div>
-                      <p className="text-sm text-muted-foreground">Nombre del equipo</p>
-                      <p className="font-medium">{activo.nombre_equipo}</p>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Monitor className="w-5 h-5" />
+                Información del Sistema
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">RustDesk ID</p>
+                  {activo.rustdesk_id ? (
+                    <div className="flex items-center mt-1">
+                      <span className="font-mono font-medium bg-muted px-2 py-1 rounded-md text-sm">
+                        {activo.rustdesk_id}
+                      </span>
+                      <BotonCopiar texto={activo.rustdesk_id} />
                     </div>
-                  )}
-                  {activo.sistema_operativo && (
-                    <div>
-                      <p className="text-sm text-muted-foreground">Sistema operativo</p>
-                      <p className="font-medium">{activo.sistema_operativo}</p>
-                    </div>
-                  )}
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-1">Dominio</p>
-                    <Badge variant={activo.unido_dominio ? "default" : "secondary"} className={activo.unido_dominio ? "bg-green-600 hover:bg-green-700" : ""}>
-                      {activo.unido_dominio ? "Unido a dominio" : "Sin dominio"}
+                  ) : (
+                    <Badge variant="secondary" className="mt-1 font-normal text-muted-foreground bg-muted/50">
+                      Sin configurar
                     </Badge>
-                  </div>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
-          )}
+                {(activo.tipo === 'notebook' || activo.tipo === 'escritorio') && (
+                  <>
+                    {activo.nombre_equipo && (
+                      <div>
+                        <p className="text-sm text-muted-foreground">Nombre del equipo</p>
+                        <p className="font-medium">{activo.nombre_equipo}</p>
+                      </div>
+                    )}
+                    {activo.sistema_operativo && (
+                      <div>
+                        <p className="text-sm text-muted-foreground">Sistema operativo</p>
+                        <p className="font-medium">{activo.sistema_operativo}</p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">Dominio</p>
+                      <Badge variant={activo.unido_dominio ? "default" : "secondary"} className={activo.unido_dominio ? "bg-green-600 hover:bg-green-700" : ""}>
+                        {activo.unido_dominio ? "Unido a dominio" : "Sin dominio"}
+                      </Badge>
+                    </div>
+                  </>
+                )}
+              </div>
+            </CardContent>
+          </Card>
 
           <Card>
             <CardHeader>

@@ -18,6 +18,7 @@ export interface Activo {
   unido_dominio: boolean
   nombre_equipo: string | null
   sistema_operativo: string | null
+  rustdesk_id: string | null
   creado_en: string
   actualizado_en: string
 }
