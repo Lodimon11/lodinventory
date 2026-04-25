@@ -16,8 +16,8 @@ export function NavSidebar() {
   const rutaActual = usePathname()
 
   return (
-    <nav className="flex flex-col h-full bg-[linear-gradient(180deg,#191E29,#141920)] border-r-[0.5px] border-r-[rgba(255,255,255,0.06)] text-sidebar-foreground py-6 flex-1 px-4">
-      <div className="flex-1 space-y-1 mt-6 overflow-y-auto">
+    <nav className="flex flex-col h-full bg-transparent py-4 flex-1 px-3">
+      <div className="flex-1 space-y-1.5 mt-2 overflow-y-auto">
         {ENLACES_NAVEGACION.map((enlace) => {
           const Icono = enlace.icono
           const esActivo = rutaActual === enlace.ruta
@@ -26,13 +26,16 @@ export function NavSidebar() {
             <Link
               key={enlace.ruta}
               href={enlace.ruta}
-              className={`group flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-all border border-transparent ${
+              className={`group relative flex items-center gap-3 px-3 py-2.5 text-sm rounded-xl transition-all duration-300 ${
                 esActivo
-                  ? 'bg-[rgba(1,195,141,0.1)] border-l-2 border-l-[var(--acento-verde)] text-[var(--acento-verde)] font-semibold'
-                  : 'text-[var(--texto-secundario)] hover:text-[var(--acento-verde)] font-medium'
+                  ? 'bg-primary/10 text-primary font-semibold border border-primary/20 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]'
+                  : 'text-muted-foreground hover:bg-white/5 hover:text-foreground font-medium border border-transparent'
               }`}
             >
-              <div className={`p-1.5 rounded-full transition-colors ${esActivo ? 'bg-transparent' : 'group-hover:bg-[#01C38D18]'}`}>
+              {esActivo && (
+                <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+              )}
+              <div className={`p-1.5 rounded-lg transition-colors duration-300 ${esActivo ? 'bg-primary/20 text-primary' : 'group-hover:text-foreground'}`}>
                 <Icono className="w-4 h-4" />
               </div>
               {enlace.etiqueta}
@@ -41,19 +44,22 @@ export function NavSidebar() {
         })}
       </div>
 
-      <div className="mt-auto">
-        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#01C38D33] to-transparent mb-4" />
+      <div className="mt-auto pt-4 border-t border-border/50">
         <button
           onClick={() => cerrarSesion()}
-          className="group flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium text-sidebar-foreground hover:text-destructive transition-colors"
+          className="group flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-300 border border-transparent"
         >
-          <div className="p-1.5 rounded-full transition-colors group-hover:bg-destructive/10">
+          <div className="p-1.5 rounded-lg transition-colors group-hover:bg-destructive/20">
             <LogOut className="w-4 h-4 shrink-0" />
           </div>
           Cerrar sesión
         </button>
-        <div className="text-center mt-4">
-          <p className="text-xs text-muted-foreground/60">v1.0</p>
+        <div className="flex items-center gap-3 px-3 mt-4">
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-foreground">
+            N
+          </div>
+          <span className="text-xs text-muted-foreground/60">v1.0</span>
+          <span className="ml-auto w-1.5 h-1.5 bg-primary rounded-full inline-block shadow-[0_0_5px_rgba(16,185,129,0.5)]"></span>
         </div>
       </div>
     </nav>

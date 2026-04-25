@@ -1,13 +1,28 @@
 import { NextResponse } from 'next/server'
 import { crearClienteAdmin } from '@/lib/supabase/admin'
 
-function escaparCSV(valor: any): string {
+function escaparCSV(valor: unknown): string {
   if (valor === null || valor === undefined) return ''
   const str = String(valor)
   if (str.includes(',') || str.includes('"') || str.includes('\n')) {
     return `"${str.replace(/"/g, '""')}"`
   }
   return str
+}
+
+interface AsignacionExport {
+  asignado_en: string;
+  desasignado_en: string | null;
+  notas: string | null;
+  activo: {
+    etiqueta: string;
+    tipo: string;
+  } | null;
+  usuario: {
+    nombre_completo: string;
+    email: string;
+    departamento: string | null;
+  } | null;
 }
 
 export async function GET() {
@@ -36,7 +51,7 @@ export async function GET() {
       ['Equipo', 'Tipo', 'Usuario', 'Email', 'Departamento', 'Asignado En', 'Desasignado En', 'Notas']
     ]
 
-    asignaciones.forEach((asig: any) => {
+    asignaciones.forEach((asig: AsignacionExport) => {
       lineasCSV.push([
         escaparCSV(asig.activo?.etiqueta),
         escaparCSV(asig.activo?.tipo),
@@ -60,6 +75,7 @@ export async function GET() {
       },
     })
   } catch (error) {
+    console.error(error)
     return NextResponse.json({ error: 'Error al exportar asignaciones' }, { status: 500 })
   }
 }

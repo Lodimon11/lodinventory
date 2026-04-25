@@ -1,6 +1,6 @@
 import { obtenerActivosPool } from '@/actions/activos'
 import { TarjetaPool } from '@/components/pool/TarjetaPool'
-import { AlertCircle, Package } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Activo } from '@/types'
 

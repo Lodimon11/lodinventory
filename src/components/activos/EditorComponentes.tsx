@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -30,65 +30,62 @@ interface EditorComponentesProps {
 }
 
 export function EditorComponentes({ value, onChange, disabled, tipo }: EditorComponentesProps) {
-  const [inicializado, setInicializado] = useState(false)
-  
-  // Estado para estructurados
-  const [estructurado, setEstructurado] = useState<Record<string, any>>({
-    marca: '',
-    modelo: '',
-    cpu: '',
-    ram_gb: '',
-    ram_tipo: '',
-    disco_gb: '',
-    disco_tipo: '',
-    disco_vida_util: '',
-    disco_fecha_revision: ''
-  })
-
-  // Estado para libres (telefono)
-  const [filas, setFilas] = useState<FilaComponente[]>([])
-
-  const esEstructurado = tipo === 'notebook' || tipo === 'escritorio'
-
-  useEffect(() => {
-    if (inicializado) return
-    
+  const parseEstructurado = (val: string, t: TipoActivo) => {
+    const defaults = {
+      marca: '', modelo: '', cpu: '', ram_gb: '', ram_tipo: '', disco_gb: '', disco_tipo: '', disco_vida_util: '', disco_fecha_revision: ''
+    }
+    if (t !== 'notebook' && t !== 'escritorio') return defaults
     try {
-      if (!value || value === '{}') {
-        setFilas([])
-      } else {
-        const parsed = JSON.parse(value)
-        if (esEstructurado) {
-          setEstructurado({
-            marca: parsed.marca || '',
-            modelo: parsed.modelo || '',
-            cpu: parsed.cpu || '',
-            ram_gb: parsed.ram_gb || '',
-            ram_tipo: parsed.ram_tipo || '',
-            disco_gb: parsed.disco_gb || '',
-            disco_tipo: parsed.disco_tipo || '',
-            disco_vida_util: parsed.disco_vida_util || '',
-            disco_fecha_revision: parsed.disco_fecha_revision || ''
-          })
-        } else {
-          const nuevasFilas = Object.entries(parsed).map(([k, v]) => {
-            const esPredefinida = OPCIONES_CLAVE.some(op => op.value === k && k !== 'otros')
-            return {
-              id: Math.random().toString(36).substring(7),
-              clave: esPredefinida ? k : 'otros',
-              clavePersonalizada: esPredefinida ? '' : k,
-              valor: String(v)
-            }
-          })
-          setFilas(nuevasFilas)
-        }
+      if (!val || val === '{}') return defaults
+      const parsed = JSON.parse(val)
+      return {
+        marca: parsed.marca || '',
+        modelo: parsed.modelo || '',
+        cpu: parsed.cpu || '',
+        ram_gb: parsed.ram_gb || '',
+        ram_tipo: parsed.ram_tipo || '',
+        disco_gb: parsed.disco_gb || '',
+        disco_tipo: parsed.disco_tipo || '',
+        disco_vida_util: parsed.disco_vida_util || '',
+        disco_fecha_revision: parsed.disco_fecha_revision || ''
       }
     } catch {
-      setFilas([])
-    } finally {
-      setInicializado(true)
+      return defaults
     }
-  }, [value, inicializado, esEstructurado])
+  }
+
+  const parseFilas = (val: string, t: TipoActivo) => {
+    if (t === 'notebook' || t === 'escritorio') return []
+    try {
+      if (!val || val === '{}') return []
+      const parsed = JSON.parse(val)
+      return Object.entries(parsed).map(([k, v]) => {
+        const esPredefinida = OPCIONES_CLAVE.some(op => op.value === k && k !== 'otros')
+        return {
+          id: Math.random().toString(36).substring(7),
+          clave: esPredefinida ? k : 'otros',
+          clavePersonalizada: esPredefinida ? '' : k,
+          valor: String(v)
+        }
+      })
+    } catch {
+      return []
+    }
+  }
+  const [estructurado, setEstructurado] = useState<Record<string, string>>(() => parseEstructurado(value, tipo))
+  const [filas, setFilas] = useState<FilaComponente[]>(() => parseFilas(value, tipo))
+  
+  const [prevValue, setPrevValue] = useState(value)
+  const [prevTipo, setPrevTipo] = useState(tipo)
+
+  if (value !== prevValue || tipo !== prevTipo) {
+    setPrevValue(value)
+    setPrevTipo(tipo)
+    setEstructurado(parseEstructurado(value, tipo))
+    setFilas(parseFilas(value, tipo))
+  }
+
+  const esEstructurado = tipo === 'notebook' || tipo === 'escritorio'
 
   const manejarCambioEstructurado = (campo: string, nuevoValor: string) => {
     const nuevoObj = { ...estructurado, [campo]: nuevoValor }
@@ -98,7 +95,6 @@ export function EditorComponentes({ value, onChange, disabled, tipo }: EditorCom
 
   const manejarCambioFilas = (nuevasFilas: FilaComponente[]) => {
     setFilas(nuevasFilas)
-    
     const obj: Record<string, string> = {}
     nuevasFilas.forEach(fila => {
       const claveFinal = fila.clave === 'otros' ? fila.clavePersonalizada.trim() : fila.clave
@@ -106,7 +102,6 @@ export function EditorComponentes({ value, onChange, disabled, tipo }: EditorCom
         obj[claveFinal] = fila.valor.trim()
       }
     })
-    
     onChange(JSON.stringify(obj, null, 2))
   }
 
@@ -173,7 +168,7 @@ export function EditorComponentes({ value, onChange, disabled, tipo }: EditorCom
             <Label className="text-xs">Tipo RAM</Label>
             <Select 
               value={estructurado.ram_tipo} 
-              onValueChange={val => manejarCambioEstructurado('ram_tipo', val)}
+              onValueChange={val => manejarCambioEstructurado('ram_tipo', val || '')}
               disabled={disabled}
             >
               <SelectTrigger>
@@ -204,7 +199,7 @@ export function EditorComponentes({ value, onChange, disabled, tipo }: EditorCom
             <Label className="text-xs">Tipo Disco</Label>
             <Select 
               value={estructurado.disco_tipo} 
-              onValueChange={val => manejarCambioEstructurado('disco_tipo', val)}
+              onValueChange={val => manejarCambioEstructurado('disco_tipo', val || '')}
               disabled={disabled}
             >
               <SelectTrigger>

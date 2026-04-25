@@ -46,6 +46,7 @@ export function FormularioActivo({ activo }: FormularioActivoProps) {
   const esEdicion = !!activo
 
   const form = useForm<ValoresFormulario>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(esquemaActivo) as any,
     defaultValues: {
       etiqueta: activo?.etiqueta || '',

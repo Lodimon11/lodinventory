@@ -1,13 +1,30 @@
 import { NextResponse } from 'next/server'
 import { crearClienteAdmin } from '@/lib/supabase/admin'
 
-function escaparCSV(valor: any): string {
+function escaparCSV(valor: unknown): string {
   if (valor === null || valor === undefined) return ''
   const str = String(valor)
   if (str.includes(',') || str.includes('"') || str.includes('\n')) {
     return `"${str.replace(/"/g, '""')}"`
   }
   return str
+}
+
+interface ActivoExport {
+  etiqueta: string;
+  tipo: string;
+  estado: string;
+  direccion_mac: string | null;
+  componentes: Record<string, unknown> | null;
+  asignaciones?: Array<{
+    asignado_en: string;
+    desasignado_en: string | null;
+    usuario: {
+      nombre_completo: string;
+      email: string;
+      departamento: string | null;
+    } | null;
+  }>;
 }
 
 export async function GET() {
@@ -35,8 +52,8 @@ export async function GET() {
       ['Etiqueta', 'Tipo', 'Estado', 'Dirección MAC', 'Usuario Asignado', 'Email Usuario', 'Departamento', 'Asignado Desde', 'Componentes']
     ]
 
-    activos.forEach((activo: any) => {
-      const asignacionActiva = activo.asignaciones?.find((a: any) => !a.desasignado_en)
+    activos.forEach((activo: ActivoExport) => {
+      const asignacionActiva = activo.asignaciones?.find((a) => !a.desasignado_en)
       const usuario = asignacionActiva?.usuario
 
       lineasCSV.push([
@@ -63,6 +80,7 @@ export async function GET() {
       },
     })
   } catch (error) {
+    console.error(error)
     return NextResponse.json({ error: 'Error al exportar activos' }, { status: 500 })
   }
 }

@@ -7,7 +7,7 @@ import { DialogConfirmacion } from '@/components/ui/DialogConfirmacion'
 import { Textarea } from '@/components/ui/textarea'
 import { ejecutarDesasignacion } from '@/actions/usuarios'
 import { toast } from 'sonner'
-import { MinusCircle, Loader2 } from 'lucide-react'
+import { MinusCircle } from 'lucide-react'
 
 interface BotonDesasignarProps {
   asignacionId: string

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { LucideIcon } from 'lucide-react'
+import { LucideIcon, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 
 interface TarjetaMetricaProps {
   titulo: string
@@ -7,40 +7,51 @@ interface TarjetaMetricaProps {
   icono: LucideIcon
   colorIcono: string
   descripcion?: string
+  trend?: { value: number; type: 'up' | 'down' | 'neutral' }
 }
 
-export function TarjetaMetrica({ titulo, valor, icono: Icono, colorIcono, descripcion }: TarjetaMetricaProps) {
-  const colorMap: Record<string, { border: string, bg: string, text: string }> = {
-    'text-primary': { border: 'border-l-[#6B8FD4]', bg: 'bg-[rgba(107,143,212,0.12)]', text: 'text-[#6B8FD4]' },
-    'text-green-500': { border: 'border-l-[#01C38D]', bg: 'bg-[rgba(1,195,141,0.12)]', text: 'text-[#01C38D]' },
-    'text-yellow-500': { border: 'border-l-[#d4a843]', bg: 'bg-[rgba(212,168,67,0.12)]', text: 'text-[#d4a843]' },
-    'text-blue-500': { border: 'border-l-[#6B8FD4]', bg: 'bg-[rgba(107,143,212,0.12)]', text: 'text-[#6B8FD4]' },
+export function TarjetaMetrica({ titulo, valor, icono: Icono, colorIcono, descripcion, trend }: TarjetaMetricaProps) {
+  // Map our predefined colors to more robust styles
+  const colorMap: Record<string, { bg: string, text: string, shadow: string, glow: string }> = {
+    'text-primary': { bg: 'bg-[#0EA5E9]/10', text: 'text-[#0EA5E9]', shadow: 'shadow-[0_0_15px_rgba(14,165,233,0.15)]', glow: 'shadow-[inset_0_0_20px_rgba(14,165,233,0.05)]' },
+    'text-green-500': { bg: 'bg-[#10B981]/10', text: 'text-[#10B981]', shadow: 'shadow-[0_0_15px_rgba(16,185,129,0.15)]', glow: 'shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]' },
+    'text-yellow-500': { bg: 'bg-[#F59E0B]/10', text: 'text-[#F59E0B]', shadow: 'shadow-[0_0_15px_rgba(245,158,11,0.15)]', glow: 'shadow-[inset_0_0_20px_rgba(245,158,11,0.05)]' },
+    'text-blue-500': { bg: 'bg-[#8B5CF6]/10', text: 'text-[#8B5CF6]', shadow: 'shadow-[0_0_15px_rgba(139,92,246,0.15)]', glow: 'shadow-[inset_0_0_20px_rgba(139,92,246,0.05)]' },
   }
   
   const colorStyle = colorMap[colorIcono] || colorMap['text-primary']
 
   return (
-    <Card className={`relative overflow-hidden shadow-sm dark:shadow-none border-l-[3px] ${colorStyle.border} hover:-translate-y-[2px] transition-all duration-300 animate-fade-in-up group`}>
-      {/* Fondo con opacidad extra */}
-      <div className={`absolute inset-0 ${colorStyle.bg} opacity-20 -z-10`} />
-      
-      <CardHeader className="flex flex-row items-center justify-between pb-4 space-y-0 relative z-10">
-        <CardTitle className="heading-sm text-muted-foreground font-medium">
+    <Card className={`neo-card relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 ${colorStyle.glow}`}>
+      <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 relative z-10">
+        <div className={`p-2.5 rounded-xl ${colorStyle.bg} ${colorStyle.shadow} transition-all duration-300 group-hover:scale-110`}>
+          <Icono className={`w-5 h-5 ${colorStyle.text}`} />
+        </div>
+        <CardTitle className="text-sm font-semibold text-foreground/90">
           {titulo}
         </CardTitle>
-        <div className={`p-2 rounded-full ${colorStyle.bg} transition-colors duration-300`}>
-          <Icono className={`w-4 h-4 ${colorStyle.text}`} />
-        </div>
       </CardHeader>
-      <CardContent>
-        <div className="text-[3rem] leading-none tracking-tight font-heading font-bold text-[var(--acento-verde)]">
+      <CardContent className="pt-2">
+        <div className={`text-[2.5rem] leading-none tracking-tight font-bold ${colorStyle.text} mb-2`}>
           {valor}
         </div>
-        {descripcion && (
-          <p className="body-text text-[var(--texto-secundario)] mt-3 pt-3 border-t border-border/20">
+        <div className="flex items-center justify-between mt-4">
+          <p className="text-xs text-muted-foreground font-medium">
             {descripcion}
           </p>
-        )}
+          {trend && (
+            <div className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full ${
+              trend.type === 'up' ? 'text-[#10B981] bg-[#10B981]/10' : 
+              trend.type === 'down' ? 'text-[#EF4444] bg-[#EF4444]/10' : 
+              'text-[#F59E0B] bg-[#F59E0B]/10'
+            }`}>
+              {trend.type === 'up' ? <TrendingUp className="w-3 h-3" /> : 
+               trend.type === 'down' ? <TrendingDown className="w-3 h-3" /> : 
+               <Minus className="w-3 h-3" />}
+              <span>{Math.abs(trend.value)}%</span>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   )

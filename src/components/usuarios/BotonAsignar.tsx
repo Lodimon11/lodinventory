@@ -27,7 +27,7 @@ export function BotonAsignar({ usuarioId, activosDisponibles }: BotonAsignarProp
     if (!activoSeleccionado) return toast.error('Selecciona un equipo primero')
     
     setCargando(true)
-    const { exito, error } = await ejecutarAsignacion(activoSeleccionado, usuarioId, notas)
+    const { error } = await ejecutarAsignacion(activoSeleccionado, usuarioId, notas)
     setCargando(false)
 
     if (error) {
