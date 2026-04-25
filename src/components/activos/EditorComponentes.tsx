@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { X, Plus } from 'lucide-react'
+import { TipoActivo } from '@/types'
+import { Label } from '@/components/ui/label'
 
 interface FilaComponente {
   id: string
@@ -14,12 +16,8 @@ interface FilaComponente {
 }
 
 const OPCIONES_CLAVE = [
-  { value: 'ram_gb', label: 'RAM (GB)' },
-  { value: 'ssd_gb', label: 'Disco Estado Sólido (GB)' },
-  { value: 'cpu', label: 'Procesador' },
   { value: 'pantalla', label: 'Pantalla' },
   { value: 'monitor', label: 'Monitor' },
-  { value: 'modelo', label: 'Modelo' },
   { value: 'almacenamiento_gb', label: 'Almacenamiento Total (GB)' },
   { value: 'otros', label: 'Otros (Personalizado)' },
 ]
@@ -28,13 +26,30 @@ interface EditorComponentesProps {
   value: string
   onChange: (value: string) => void
   disabled?: boolean
+  tipo: TipoActivo
 }
 
-export function EditorComponentes({ value, onChange, disabled }: EditorComponentesProps) {
-  const [filas, setFilas] = useState<FilaComponente[]>([])
+export function EditorComponentes({ value, onChange, disabled, tipo }: EditorComponentesProps) {
   const [inicializado, setInicializado] = useState(false)
+  
+  // Estado para estructurados
+  const [estructurado, setEstructurado] = useState<Record<string, any>>({
+    marca: '',
+    modelo: '',
+    cpu: '',
+    ram_gb: '',
+    ram_tipo: '',
+    disco_gb: '',
+    disco_tipo: '',
+    disco_vida_util: '',
+    disco_fecha_revision: ''
+  })
 
-  // Inicializar filas a partir del JSON (solo la primera vez)
+  // Estado para libres (telefono)
+  const [filas, setFilas] = useState<FilaComponente[]>([])
+
+  const esEstructurado = tipo === 'notebook' || tipo === 'escritorio'
+
   useEffect(() => {
     if (inicializado) return
     
@@ -43,24 +58,43 @@ export function EditorComponentes({ value, onChange, disabled }: EditorComponent
         setFilas([])
       } else {
         const parsed = JSON.parse(value)
-        const nuevasFilas = Object.entries(parsed).map(([k, v]) => {
-          const esPredefinida = OPCIONES_CLAVE.some(op => op.value === k && k !== 'otros')
-          return {
-            id: Math.random().toString(36).substring(7),
-            clave: esPredefinida ? k : 'otros',
-            clavePersonalizada: esPredefinida ? '' : k,
-            valor: String(v)
-          }
-        })
-        setFilas(nuevasFilas)
+        if (esEstructurado) {
+          setEstructurado({
+            marca: parsed.marca || '',
+            modelo: parsed.modelo || '',
+            cpu: parsed.cpu || '',
+            ram_gb: parsed.ram_gb || '',
+            ram_tipo: parsed.ram_tipo || '',
+            disco_gb: parsed.disco_gb || '',
+            disco_tipo: parsed.disco_tipo || '',
+            disco_vida_util: parsed.disco_vida_util || '',
+            disco_fecha_revision: parsed.disco_fecha_revision || ''
+          })
+        } else {
+          const nuevasFilas = Object.entries(parsed).map(([k, v]) => {
+            const esPredefinida = OPCIONES_CLAVE.some(op => op.value === k && k !== 'otros')
+            return {
+              id: Math.random().toString(36).substring(7),
+              clave: esPredefinida ? k : 'otros',
+              clavePersonalizada: esPredefinida ? '' : k,
+              valor: String(v)
+            }
+          })
+          setFilas(nuevasFilas)
+        }
       }
     } catch {
-      // JSON inválido, iniciar vacío
       setFilas([])
     } finally {
       setInicializado(true)
     }
-  }, [value, inicializado])
+  }, [value, inicializado, esEstructurado])
+
+  const manejarCambioEstructurado = (campo: string, nuevoValor: string) => {
+    const nuevoObj = { ...estructurado, [campo]: nuevoValor }
+    setEstructurado(nuevoObj)
+    onChange(JSON.stringify(nuevoObj, null, 2))
+  }
 
   const manejarCambioFilas = (nuevasFilas: FilaComponente[]) => {
     setFilas(nuevasFilas)
@@ -68,7 +102,6 @@ export function EditorComponentes({ value, onChange, disabled }: EditorComponent
     const obj: Record<string, string> = {}
     nuevasFilas.forEach(fila => {
       const claveFinal = fila.clave === 'otros' ? fila.clavePersonalizada.trim() : fila.clave
-      // Solo incluimos campos que tengan una clave y no estén completamente vacíos en valor
       if (claveFinal && fila.valor.trim() !== '') {
         obj[claveFinal] = fila.valor.trim()
       }
@@ -80,7 +113,7 @@ export function EditorComponentes({ value, onChange, disabled }: EditorComponent
   const agregarFila = () => {
     manejarCambioFilas([
       ...filas, 
-      { id: Math.random().toString(36).substring(7), clave: 'ram_gb', clavePersonalizada: '', valor: '' }
+      { id: Math.random().toString(36).substring(7), clave: 'pantalla', clavePersonalizada: '', valor: '' }
     ])
   }
 
@@ -90,6 +123,123 @@ export function EditorComponentes({ value, onChange, disabled }: EditorComponent
 
   const actualizarFila = (id: string, campo: keyof FilaComponente, nuevoValor: string) => {
     manejarCambioFilas(filas.map(f => f.id === id ? { ...f, [campo]: nuevoValor } : f))
+  }
+
+  if (esEstructurado) {
+    return (
+      <div className="space-y-4 border p-4 rounded-md bg-muted/20">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-xs">Marca {tipo === 'notebook' && '*'}</Label>
+            <Input 
+              value={estructurado.marca} 
+              onChange={e => manejarCambioEstructurado('marca', e.target.value)}
+              disabled={disabled}
+              placeholder="Ej. Dell, HP, Lenovo"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs">Modelo {tipo === 'notebook' && '*'}</Label>
+            <Input 
+              value={estructurado.modelo} 
+              onChange={e => manejarCambioEstructurado('modelo', e.target.value)}
+              disabled={disabled}
+              placeholder="Ej. Latitude 5420"
+            />
+          </div>
+          <div className="space-y-2 col-span-2">
+            <Label className="text-xs">Procesador (CPU)</Label>
+            <Input 
+              value={estructurado.cpu} 
+              onChange={e => manejarCambioEstructurado('cpu', e.target.value)}
+              disabled={disabled}
+              placeholder="Ej. i7-1165G7"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 border-t pt-4">
+          <div className="space-y-2">
+            <Label className="text-xs">RAM (GB)</Label>
+            <Input 
+              type="number"
+              value={estructurado.ram_gb} 
+              onChange={e => manejarCambioEstructurado('ram_gb', e.target.value)}
+              disabled={disabled}
+              placeholder="16"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs">Tipo RAM</Label>
+            <Select 
+              value={estructurado.ram_tipo} 
+              onValueChange={val => manejarCambioEstructurado('ram_tipo', val)}
+              disabled={disabled}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="DDR2">DDR2</SelectItem>
+                <SelectItem value="DDR3">DDR3</SelectItem>
+                <SelectItem value="DDR4">DDR4</SelectItem>
+                <SelectItem value="DDR5">DDR5</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 border-t pt-4">
+          <div className="space-y-2">
+            <Label className="text-xs">Disco (GB)</Label>
+            <Input 
+              type="number"
+              value={estructurado.disco_gb} 
+              onChange={e => manejarCambioEstructurado('disco_gb', e.target.value)}
+              disabled={disabled}
+              placeholder="512"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs">Tipo Disco</Label>
+            <Select 
+              value={estructurado.disco_tipo} 
+              onValueChange={val => manejarCambioEstructurado('disco_tipo', val)}
+              disabled={disabled}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="HDD">HDD</SelectItem>
+                <SelectItem value="SSD">SSD</SelectItem>
+                <SelectItem value="NVMe">NVMe</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs">Vida Útil (%)</Label>
+            <Input 
+              type="number"
+              min="0" max="100"
+              value={estructurado.disco_vida_util} 
+              onChange={e => manejarCambioEstructurado('disco_vida_util', e.target.value)}
+              disabled={disabled}
+              placeholder="87"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs">Revisión Disco</Label>
+            <Input 
+              type="date"
+              value={estructurado.disco_fecha_revision} 
+              onChange={e => manejarCambioEstructurado('disco_fecha_revision', e.target.value)}
+              disabled={disabled}
+            />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

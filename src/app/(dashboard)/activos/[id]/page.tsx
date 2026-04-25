@@ -100,30 +100,106 @@ export default async function DetalleActivoPage({ params }: { params: Promise<{ 
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* 2. Especificaciones / Componentes */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Laptop className="w-5 h-5" />
-              Especificaciones Técnicas
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {Object.keys(activo.componentes || {}).length > 0 ? (
-              <div className="divide-y border rounded-md">
-                {Object.entries(activo.componentes).map(([clave, valor]) => (
-                  <div key={clave} className="flex justify-between p-3 text-sm">
-                    <span className="font-medium text-muted-foreground">
-                      {CLAVES_COMPONENTES[clave] || clave}
-                    </span>
-                    <span className="font-semibold text-right">{String(valor)}</span>
+        <div className="space-y-6">
+          {(activo.nombre_equipo || activo.sistema_operativo || activo.unido_dominio !== undefined) && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Monitor className="w-5 h-5" />
+                  Información del Sistema
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {activo.nombre_equipo && (
+                    <div>
+                      <p className="text-sm text-muted-foreground">Nombre del equipo</p>
+                      <p className="font-medium">{activo.nombre_equipo}</p>
+                    </div>
+                  )}
+                  {activo.sistema_operativo && (
+                    <div>
+                      <p className="text-sm text-muted-foreground">Sistema operativo</p>
+                      <p className="font-medium">{activo.sistema_operativo}</p>
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-1">Dominio</p>
+                    <Badge variant={activo.unido_dominio ? "default" : "secondary"} className={activo.unido_dominio ? "bg-green-600 hover:bg-green-700" : ""}>
+                      {activo.unido_dominio ? "Unido a dominio" : "Sin dominio"}
+                    </Badge>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">No hay especificaciones registradas.</p>
-            )}
-          </CardContent>
-        </Card>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Laptop className="w-5 h-5" />
+                Especificaciones Técnicas
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {Object.keys(activo.componentes || {}).length > 0 ? (
+                <div className="divide-y border border-border/40 rounded-md bg-muted/5">
+                  {(activo.tipo === 'notebook' || activo.tipo === 'escritorio') ? (
+                    <>
+                      {activo.componentes.marca && (
+                        <div className="flex justify-between p-3 text-sm">
+                          <span className="font-medium text-muted-foreground">Marca</span>
+                          <span className="font-semibold text-right">{String(activo.componentes.marca)}</span>
+                        </div>
+                      )}
+                      {activo.componentes.modelo && (
+                        <div className="flex justify-between p-3 text-sm">
+                          <span className="font-medium text-muted-foreground">Modelo</span>
+                          <span className="font-semibold text-right">{String(activo.componentes.modelo)}</span>
+                        </div>
+                      )}
+                      {activo.componentes.cpu && (
+                        <div className="flex justify-between p-3 text-sm">
+                          <span className="font-medium text-muted-foreground">CPU</span>
+                          <span className="font-semibold text-right">{String(activo.componentes.cpu)}</span>
+                        </div>
+                      )}
+                      {activo.componentes.ram_gb && (
+                        <div className="flex justify-between p-3 text-sm">
+                          <span className="font-medium text-muted-foreground">Memoria RAM</span>
+                          <span className="font-semibold text-right">
+                            {String(activo.componentes.ram_gb)} GB {activo.componentes.ram_tipo ? String(activo.componentes.ram_tipo) : ''}
+                          </span>
+                        </div>
+                      )}
+                      {activo.componentes.disco_gb && (
+                        <div className="flex justify-between p-3 text-sm">
+                          <span className="font-medium text-muted-foreground">Almacenamiento</span>
+                          <span className="font-semibold text-right">
+                            {String(activo.componentes.disco_gb)} GB {activo.componentes.disco_tipo ? String(activo.componentes.disco_tipo) : ''}
+                            {activo.componentes.disco_vida_util ? ` — ${String(activo.componentes.disco_vida_util)}% vida útil` : ''}
+                            {activo.componentes.disco_fecha_revision ? ` (revisado ${new Date(String(activo.componentes.disco_fecha_revision)).toLocaleDateString('es-AR')})` : ''}
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    Object.entries(activo.componentes).map(([clave, valor]) => (
+                      <div key={clave} className="flex justify-between p-3 text-sm">
+                        <span className="font-medium text-muted-foreground">
+                          {CLAVES_COMPONENTES[clave] || clave}
+                        </span>
+                        <span className="font-semibold text-right">{String(valor)}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-4">No hay especificaciones registradas.</p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
         {/* 3. Asignación Vigente */}
         <Card>

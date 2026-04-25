@@ -15,6 +15,9 @@ export interface Activo {
   tipo: TipoActivo
   estado: EstadoActivo
   componentes: Record<string, unknown>
+  unido_dominio: boolean
+  nombre_equipo: string | null
+  sistema_operativo: string | null
   creado_en: string
   actualizado_en: string
 }

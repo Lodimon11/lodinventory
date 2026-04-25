@@ -28,6 +28,9 @@ const esquemaActivo = z.object({
       return false
     }
   }, { message: 'Debe ser un JSON válido' }),
+  unido_dominio: z.boolean().default(false),
+  nombre_equipo: z.string().optional(),
+  sistema_operativo: z.string().optional(),
 })
 
 type ValoresFormulario = z.infer<typeof esquemaActivo>
@@ -42,15 +45,20 @@ export function FormularioActivo({ activo }: FormularioActivoProps) {
   const esEdicion = !!activo
 
   const form = useForm<ValoresFormulario>({
-    resolver: zodResolver(esquemaActivo),
+    resolver: zodResolver(esquemaActivo) as any,
     defaultValues: {
       etiqueta: activo?.etiqueta || '',
       tipo: activo?.tipo || 'notebook',
       direccion_mac: activo?.direccion_mac || '',
       estado: activo?.estado || 'listo_para_entregar',
       componentes: activo?.componentes ? JSON.stringify(activo.componentes, null, 2) : '{}',
+      unido_dominio: activo?.unido_dominio || false,
+      nombre_equipo: activo?.nombre_equipo || '',
+      sistema_operativo: activo?.sistema_operativo || '',
     },
   })
+
+  const tipoObservado = form.watch('tipo')
 
   async function manejarEnvio(datos: ValoresFormulario) {
     setCargando(true)
@@ -59,7 +67,9 @@ export function FormularioActivo({ activo }: FormularioActivoProps) {
     const datosParseados = {
       ...datos,
       componentes: JSON.parse(datos.componentes),
-      direccion_mac: datos.direccion_mac === '' ? null : datos.direccion_mac
+      direccion_mac: datos.direccion_mac === '' ? null : datos.direccion_mac,
+      nombre_equipo: datos.nombre_equipo === '' ? null : datos.nombre_equipo,
+      sistema_operativo: datos.sistema_operativo === '' ? null : datos.sistema_operativo
     }
 
     let errorRespuesta = null
@@ -166,6 +176,67 @@ export function FormularioActivo({ activo }: FormularioActivoProps) {
           />
         </div>
 
+        {(tipoObservado === 'notebook' || tipoObservado === 'escritorio') && (
+          <div className="space-y-4 border rounded-md p-4 bg-muted/10">
+            <h3 className="font-semibold text-sm">Información del Sistema</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="nombre_equipo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre del Equipo</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ej. LPT-FACUNDO" {...field} value={field.value || ''} disabled={cargando} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="sistema_operativo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sistema Operativo</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ej. Windows 11, macOS, Ubuntu" {...field} value={field.value || ''} disabled={cargando} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="unido_dominio"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm md:col-span-2">
+                    <div className="space-y-0.5">
+                      <FormLabel>Unido a dominio</FormLabel>
+                      <p className="text-[0.8rem] text-muted-foreground">
+                        Indica si el equipo está unido al dominio de la organización.
+                      </p>
+                    </div>
+                    <FormControl>
+                      <div className="flex items-center h-5">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4"
+                          checked={field.value}
+                          onChange={field.onChange}
+                          disabled={cargando}
+                        />
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+        )}
+
         <FormField
           control={form.control}
           name="componentes"
@@ -177,6 +248,7 @@ export function FormularioActivo({ activo }: FormularioActivoProps) {
                   value={field.value} 
                   onChange={field.onChange} 
                   disabled={cargando} 
+                  tipo={tipoObservado}
                 />
               </FormControl>
               <FormMessage />
