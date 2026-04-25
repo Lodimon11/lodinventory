@@ -31,14 +31,17 @@ export function ActivoTarjeta({ activo }: { activo: Activo }) {
   const Icono = ICONOS_TIPO[activo.tipo] || Monitor
 
   return (
-    <Card className="flex flex-col h-full shadow-sm hover:shadow-md transition-shadow">
-      <CardHeader className="pb-3">
+    <Card className="flex flex-col h-full shadow-[0_1px_3px_rgba(0,0,0,0.08)] dark:shadow-none hover:shadow-lg dark:hover:shadow-none hover:-translate-y-[3px] transition-all duration-200">
+      <CardHeader className="pb-3 bg-gradient-to-br from-primary/10 to-transparent rounded-t-xl border-b border-border/50">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-lg font-bold flex items-center gap-2">
+          <CardTitle className="heading-sm font-bold flex items-center gap-2">
             <Icono className="w-5 h-5 text-muted-foreground" />
             {activo.etiqueta}
           </CardTitle>
           <Badge variant="outline" className={COLORES_ESTADO[activo.estado]}>
+            {activo.estado === 'activo' && (
+              <span className="w-1.5 h-1.5 rounded-full bg-current mr-1.5 animate-pulse-dot" />
+            )}
             {ETIQUETAS_ESTADO[activo.estado]}
           </Badge>
         </div>

@@ -39,65 +39,68 @@ export function BarraSuperior() {
   const ultimoAcceso = usuario?.last_sign_in_at ? new Date(usuario.last_sign_in_at).toLocaleString('es-AR') : '-'
 
   return (
-    <header className="h-16 shrink-0 border-b bg-card flex items-center justify-between px-6">
-      <h2 className="text-lg font-semibold text-foreground">
-        {titulo}
-      </h2>
+    <div className="flex flex-col w-full shrink-0">
+      <header className="h-16 shrink-0 bg-card flex items-center justify-between px-6">
+        <h2 className="heading-lg font-semibold text-foreground">
+          {titulo}
+        </h2>
 
-      <div className="flex items-center gap-3">
-        <BotonTema />
-        <div className="text-sm text-right hidden sm:block">
-          <p className="font-medium leading-none text-foreground">
-            {usuario?.email || 'Cargando...'}
-          </p>
-          <p className="text-xs text-muted-foreground mt-1">
-            Administrador IT
-          </p>
-        </div>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger render={<Button variant="ghost" className="relative h-9 w-9 rounded-full bg-primary/10 text-primary font-medium hover:bg-primary/20 transition-colors border border-border" />}>
-            {inicial}
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-64" align="end">
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{usuario?.email || 'Cargando...'}</p>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    Administrador IT
-                  </p>
+        <div className="flex items-center gap-3">
+          <BotonTema />
+          <div className="text-sm text-right hidden sm:block">
+            <p className="font-medium leading-none text-foreground">
+              {usuario?.email || 'Cargando...'}
+            </p>
+            <p className="body-text text-muted-foreground mt-1">
+              Administrador IT
+            </p>
+          </div>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger render={<Button variant="ghost" className="relative h-9 w-9 rounded-full bg-primary/10 text-primary font-medium hover:bg-primary/20 transition-colors border border-border" />}>
+              {inicial}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64" align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{usuario?.email || 'Cargando...'}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      Administrador IT
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              
+              <div className="px-2 py-2 text-sm text-muted-foreground space-y-2">
+                <p className="font-medium text-foreground">Información de cuenta</p>
+                <div className="flex justify-between">
+                  <span>Creada:</span>
+                  <span className="text-foreground">{fechaCreacion}</span>
                 </div>
-              </DropdownMenuLabel>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            
-            <div className="px-2 py-2 text-sm text-muted-foreground space-y-2">
-              <p className="font-medium text-foreground">Información de cuenta</p>
-              <div className="flex justify-between">
-                <span>Creada:</span>
-                <span className="text-foreground">{fechaCreacion}</span>
+                <div className="flex justify-between">
+                  <span>Último acceso:</span>
+                  <span className="text-foreground text-xs my-auto">{ultimoAcceso}</span>
+                </div>
+                <div className="flex items-center justify-between pt-1">
+                  <span>Permisos:</span>
+                  <Badge variant="outline" className="text-green-600 bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-900/50">
+                    Administrador IT
+                  </Badge>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span>Último acceso:</span>
-                <span className="text-foreground text-xs my-auto">{ultimoAcceso}</span>
-              </div>
-              <div className="flex items-center justify-between pt-1">
-                <span>Permisos:</span>
-                <Badge variant="outline" className="text-green-600 bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-900/50">
-                  Administrador IT
-                </Badge>
-              </div>
-            </div>
-            
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => cerrarSesion()} className="text-red-600 focus:text-red-600 focus:bg-red-100 dark:focus:bg-red-900/30 cursor-pointer">
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Cerrar sesión</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </header>
+              
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => cerrarSesion()} className="text-red-600 focus:text-red-600 focus:bg-red-100 dark:focus:bg-red-900/30 cursor-pointer">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Cerrar sesión</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </header>
+      <div className="h-[1px] w-full bg-gradient-to-r from-primary to-transparent opacity-80" />
+    </div>
   )
 }

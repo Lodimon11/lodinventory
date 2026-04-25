@@ -26,27 +26,35 @@ export function NavSidebar() {
             <Link
               key={enlace.ruta}
               href={enlace.ruta}
-              className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-all border border-transparent ${
+              className={`group flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-all border border-transparent ${
                 esActivo
                   ? 'bg-[#01C38D18] text-[#01C38D] font-semibold border-[#01C38D40]'
-                  : 'text-sidebar-foreground hover:bg-[#01C38D18] hover:text-[#01C38D] font-medium'
+                  : 'text-sidebar-foreground hover:text-[#01C38D] font-medium'
               }`}
             >
-              <Icono className="w-4 h-4" />
+              <div className={`p-1.5 rounded-full transition-colors ${esActivo ? 'bg-transparent' : 'group-hover:bg-[#01C38D18]'}`}>
+                <Icono className="w-4 h-4" />
+              </div>
               {enlace.etiqueta}
             </Link>
           )
         })}
       </div>
 
-      <div className="pt-4 mt-auto border-t border-border">
+      <div className="mt-auto">
+        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#01C38D33] to-transparent mb-4" />
         <button
           onClick={() => cerrarSesion()}
-          className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+          className="group flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-medium text-sidebar-foreground hover:text-destructive transition-colors"
         >
-          <LogOut className="w-4 h-4 shrink-0" />
+          <div className="p-1.5 rounded-full transition-colors group-hover:bg-destructive/10">
+            <LogOut className="w-4 h-4 shrink-0" />
+          </div>
           Cerrar sesión
         </button>
+        <div className="text-center mt-4">
+          <p className="text-xs text-muted-foreground/60">v1.0</p>
+        </div>
       </div>
     </nav>
   )
